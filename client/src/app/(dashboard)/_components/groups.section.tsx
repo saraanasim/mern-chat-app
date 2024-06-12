@@ -1,5 +1,5 @@
-import { Heading } from "@/components/heading"
-import { SectionItem } from "@/components/section-item"
+import { Heading } from "@/ui/heading"
+import { SectionItem } from "@/ui/section-item"
 import { tempPeople } from "@/utils/constants"
 
 const GroupsSection = () => {

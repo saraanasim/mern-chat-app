@@ -1,21 +1,19 @@
 import React from 'react'
 import { Avatar } from './avatar'
+import { IUser } from '@/utils/types'
 
-type Props = {
-    src: string
-    alt: string
-    name: string
-    desc: string
-}
 
-const SectionItem = ({ name, desc, ...avatarProps }: Props) => {
+const SectionItem = ({ name, bio, profilePic }: IUser) => {
 
     return (
         <div className='flex flex-col md:flex-row gap-4'>
-            <Avatar {...avatarProps} />
+            <Avatar
+                name={name}
+                profilePic={profilePic}
+            />
             <div className='flex flex-col'>
                 <p className='font-bold'>{name}</p>
-                <p className='hidden md:block text-gray-600'>{desc}</p>
+                <p className='hidden md:block text-gray-600'>{bio}</p>
             </div>
         </div>
     )

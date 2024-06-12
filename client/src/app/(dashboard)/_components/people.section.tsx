@@ -1,17 +1,7 @@
-import { Heading } from "@/components/heading"
-import { SectionItem } from "@/components/section-item"
-import { tempPeople } from "@/utils/constants"
+import { Heading } from "@/ui/heading"
+import { RenderPeople } from "@/ui/people-list"
 
 const PeopleSection = () => {
-
-  const RenderPeople = () => {
-    if (!tempPeople.length) return null
-    return tempPeople.map((each) => (
-      <SectionItem
-        {...each}
-      />
-    ))
-  }
 
   return (
     <div className="md:col-span-3 flex flex-col">
