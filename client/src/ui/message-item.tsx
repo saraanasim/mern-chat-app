@@ -12,7 +12,7 @@ export const MessageItem = (socketMessage: SocketMessage) => {
     <div className={
       mergeClasses(
         'flex flex-col w-full justify-center p-4 bg-green-300/30',
-       isSender ? 'items-start' : 'items-end'
+       isSender ? 'items-end' : 'items-start'
        )}>
       <p className='font-bold'>{socketMessage.sender.name}</p>
       <p className='text-lg'>{socketMessage.message}</p>

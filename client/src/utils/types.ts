@@ -41,4 +41,4 @@ export type IGroup = Omit<IChat, 'isGroup'> & {
   isGroup: true
 }
 
-export type SocketMessage={ sender: ActiveUserSlice, message: string,chat:IChat }
+export type SocketMessage={ sender: ActiveUserSlice, message: string,chat:IChat ,messageId:string }

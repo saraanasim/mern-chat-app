@@ -25,7 +25,7 @@ const ChatSection = ({ allUsers, allGroups,activeUser }: Props) => {
 
 
   return (
-    <div>
+    <div className='max-h-screen overflow-auto'>
      {activeChat && <PersonalChat />}
     </div>
   )

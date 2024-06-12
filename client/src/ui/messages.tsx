@@ -1,15 +1,12 @@
-import React from 'react'
+import { useAppSelector } from '@/redux/hooks'
+import { selectCurrentMessages } from '@/redux/selectors/chatsSlice.selectors'
 import { MessageItem } from './message-item'
-import { SocketMessage } from '@/utils/types'
 
-type Props={
-    messages:SocketMessage[]
-}
-
-export const Messages = ({messages}:Props) => {
+export const Messages = () => {
+  const currentMessages = useAppSelector(selectCurrentMessages)
   return (
-    <div className='flex flex-col gap-4'>
-        {messages.map((each)=><MessageItem {...each}/>)}
+    <div className='overflow-auto max-h-screen flex flex-col gap-4'>
+      {currentMessages.map((each) => <MessageItem {...each} />)}
     </div>
   )
 }
