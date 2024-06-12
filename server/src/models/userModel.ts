@@ -10,6 +10,7 @@ export interface IUser extends Document {
   bio?: string;
   profilePic?: string;
   contacts?: mongoose.Schema.Types.ObjectId[];
+  isActive?:boolean
   generateAuthToken: () => Promise<string>;
 }
 
@@ -19,6 +20,7 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true },
     password: { type: String, required: true },
     isAdmin: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: false },
     bio: { type: String, default: 'Available' },
     profilePic: {
       type: String,

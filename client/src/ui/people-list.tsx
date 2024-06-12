@@ -1,16 +1,44 @@
 'use client'
-import { useAppSelector } from "@/redux/hooks"
+import { setActiveChat, setActiveRecipient, setChatLoading } from "@/redux/chatsSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { selectAllUsers } from "@/redux/selectors/chatsSlice.selectors"
 import { SectionItem } from "./section-item"
+import { ChatApi } from "@/lib/api/chat.api"
 
 export const PeopleList = () => {
+  const dispatch = useAppDispatch()
+
   const allPeople = useAppSelector(selectAllUsers)
+
+  const onPersonClick = async (userId: string) => {
+    dispatch(setActiveRecipient(userId));
+    //Set loading
+    dispatch(setChatLoading(true))
+
+    //Find if there is any chat with current user and reciever
+    const existingChat = await ChatApi.fetchExistingChat(userId)
+    console.log({ existingChat })
+    //IF there is none, create one or fetch one
+    if (!existingChat) {
+      const newChat = await ChatApi.createNewChat(userId)
+      dispatch(setActiveChat(newChat))
+      console.log({ newChat })
+    }
+    else {
+      dispatch(setActiveChat(existingChat))
+    }
+
+    dispatch(setChatLoading(false))
+  }
+
   if (!allPeople.length) return null
   return allPeople.map((each) => (
     <SectionItem
+      id={each._id}
       desc={each.bio}
       name={each.name}
       pic={each.profilePic}
+      onClick={onPersonClick}
     />
   ))
 }

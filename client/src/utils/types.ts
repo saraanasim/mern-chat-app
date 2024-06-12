@@ -1,3 +1,6 @@
+import { ActiveUserSlice } from "@/redux/activeUserSlice";
+import { ChatsSliceType } from "@/redux/chatsSlice";
+
 export type HeadersType = {
   Authorization: string;
   'Content-Type': string;
@@ -21,10 +24,12 @@ export type IUser = {
   email: string;
   password: string;
   profilePic: string;
+  isActive:boolean
   bio: string
 }
 
 export type IChat = {
+  _id: string
   photo?: string;
   chatName: string;
   isGroup?: boolean;
@@ -35,3 +40,5 @@ export type IChat = {
 export type IGroup = Omit<IChat, 'isGroup'> & {
   isGroup: true
 }
+
+export type SocketMessage={ sender: ActiveUserSlice, message: string,chat:IChat }

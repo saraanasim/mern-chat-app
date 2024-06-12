@@ -5,12 +5,12 @@ import { ChatApi } from "@/lib/api/chat.api";
 
 const fetchData = async () => {
   try {
-    const [allUsers, allGroups] = await settlePromises([
+    const [allUsers, allGroups,activeUser] = await settlePromises([
       AuthApi.getAllUsers(),
       ChatApi.fetchAllGroups(),
+      AuthApi.validUser()
     ]);
-console.log({allGroups})
-    return { allUsers,allGroups };
+    return { allUsers,allGroups,activeUser };
   } catch (error) {
     console.error(error);
     return { branding: null };
@@ -18,10 +18,10 @@ console.log({allGroups})
 };
 
 export default async function Home() {
-  const { allUsers, allGroups } = await fetchData()
+  const { allUsers, allGroups,activeUser } = await fetchData()
   return (
     <div className="flex-grow md:col-span-6">
-      <ChatSection allUsers={allUsers} allGroups={allGroups} />
+      <ChatSection allUsers={allUsers} allGroups={allGroups} activeUser={activeUser?.user}/>
     </div>
   );
 }

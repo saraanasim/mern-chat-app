@@ -1,15 +1,17 @@
 import { Avatar } from './avatar'
 
 type Props = {
+    id: string
     name: string
     pic: string
     desc: string
+    onClick: (id: string) => void
 }
 
-const SectionItem = ({ name, pic, desc }: Props) => {
+const SectionItem = ({ name, pic, desc, id, onClick }: Props) => {
 
     return (
-        <div className='flex flex-col md:flex-row gap-4'>
+        <div className='flex flex-col md:flex-row gap-4 cursor-pointer hover:bg-blue-500' onClick={() => onClick(id)}>
             <Avatar
                 name={name}
                 pic={pic}

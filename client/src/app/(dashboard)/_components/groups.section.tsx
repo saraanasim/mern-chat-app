@@ -1,7 +1,5 @@
 import { GroupsList } from "@/ui/groups-list"
 import { Heading } from "@/ui/heading"
-import { SectionItem } from "@/ui/section-item"
-import { tempPeople } from "@/utils/constants"
 
 const GroupsSection = () => {
 

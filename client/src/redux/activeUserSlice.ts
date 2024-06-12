@@ -1,29 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { IUser } from '@/utils/types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  id: '',
+export type ActiveUserSlice = Omit<IUser, 'password'>
+
+const initialState: ActiveUserSlice = {
+  _id: '',
   email: '',
   profilePic: '',
   bio: '',
   name: '',
+  isActive: false
 };
 
 const activeUserSlice = createSlice({
   name: 'activeUser',
   initialState,
   reducers: {
-    setActiveUser: (state, { payload }) => {
-      state.id = payload.id;
+    setActiveUser: (state, { payload }: PayloadAction<ActiveUserSlice>) => {
+      state._id = payload._id;
       state.email = payload.email;
       state.profilePic = payload.profilePic;
       state.bio = payload.bio;
       state.name = payload.name;
     },
-    setUserNameAndBio: (state, { payload }) => {
-      state.name = payload.name;
-      state.bio = payload.bio;
-    },
   },
 });
-export const { setActiveUser, setUserNameAndBio } = activeUserSlice.actions;
+export const { setActiveUser } = activeUserSlice.actions;
 export default activeUserSlice.reducer;

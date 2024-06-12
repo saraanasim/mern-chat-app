@@ -37,7 +37,7 @@ const AuthApi = {
   registerUser: async (body: SignupPayload): Promise<any> => {
     return await sendRequest(API_REQUESTS.SIGN_UP.method, API_REQUESTS.SIGN_UP.path, body);
   },
-  validUser: async (): Promise<any> => {
+  validUser: async (): Promise<{ token: string, user: IUser }> => {
     return await sendRequest(API_REQUESTS.VALIDATE_USER.method, API_REQUESTS.VALIDATE_USER.path);
   },
   getAllUsers: async (): Promise<IUser[]> => {

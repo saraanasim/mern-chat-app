@@ -7,6 +7,7 @@ import chatRoutes from '../src/routes/chat';
 import messageRoutes from '../src/routes/message';
 import userRoutes from '../src/routes/user';
 import mongoDBConnect from './utils/connection';
+import { SocketMessage } from './utils/types';
 require('dotenv').config();
 
 
@@ -36,21 +37,24 @@ const io = new Server.Server(server, {
 });
 io.on('connection', (socket) => {
   socket.on('setup', (userData) => {
-    socket.join(userData.id);
+    socket.join(userData._id);
     socket.emit('connected');
   });
   socket.on('join room', (room) => {
+    console.log({room})
     socket.join(room);
   });
   socket.on('typing', (room) => socket.in(room).emit('typing'));
   socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
 
-  socket.on('new message', (newMessageRecieve) => {
-    var chat = newMessageRecieve.chatId;
+  socket.on('new message', (newMessageRecieve:SocketMessage) => {
+    console.log({newMessageRecieve})
+    var chat = newMessageRecieve.chat;
+    socket.in(chat._id).emit('message recieved', newMessageRecieve);
     if (!chat.users) console.log('chats.users is not defined');
-    chat.users.forEach((user:any) => {
-      if (user._id == newMessageRecieve.sender._id) return;
-      socket.in(user._id).emit('message recieved', newMessageRecieve);
-    });
+    // chat.users.forEach((user:any) => {
+    //   console.log({user})
+    //   socket.in(user._id).emit('message recieved', newMessageRecieve);
+    // });
   });
 });

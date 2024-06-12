@@ -87,7 +87,8 @@ export const getUserById = async (req: CustomRequest, res: Response) => {
 // Update user info
 export const getAllUsers = async (req: CustomRequest, res: Response) => {
   try {
-    const allUsers = await user.find({});
+    const currentUser = req.rootUserId
+    const allUsers = await user.find({ _id: { $ne: currentUser } });
     res.status(200).json(allUsers);
   } catch (error) {
     res.status(500).json({ error });

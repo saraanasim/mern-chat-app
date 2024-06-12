@@ -15,6 +15,15 @@ export async function setAuthCookie(value: string) {
     });
 }
 
+export async function setProfileCookie(value: string) {
+    if (!value?.length) return;
+    cookies().set({
+        name: "profile",
+        value: value,
+        path: "/",
+    });
+}
+
 const loginFormSchema = z.object({
     email: z.string({
         invalid_type_error: 'Invalid Email',
@@ -48,7 +57,6 @@ export async function loginServerAction(prevState: any, formData: FormData) {
     }
     else {
         const loginResponse = await AuthApi.loginUser({ email: email.toString(), password: password.toString() })
-        console.log({ loginResponse })
 
         if (!loginResponse?.token) {
             prevState.errors = [loginResponse.message]
@@ -57,6 +65,7 @@ export async function loginServerAction(prevState: any, formData: FormData) {
 
         }
         else {
+            console.log({loginResponse})
             setAuthCookie(loginResponse.token)
         }
 
@@ -89,7 +98,6 @@ export async function signupServerAction(prevState: any, formData: FormData) {
         firstName: firstName.toString(),
         lastName: lastName.toString()
     })
-    console.log({ signupResponse })
 
     if (signupResponse?.token) setAuthCookie(signupResponse.token)
     else {
