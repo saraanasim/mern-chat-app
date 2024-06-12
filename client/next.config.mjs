@@ -10,6 +10,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'icon-library.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
+      },
+      
     ],
   },
 };

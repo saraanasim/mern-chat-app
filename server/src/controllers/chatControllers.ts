@@ -6,9 +6,8 @@ import { CustomRequest } from '../utils/types';
 
 export const getAllGroups = async (req: CustomRequest, res: Response): Promise<void> => {
   try {
-    const chats = await Chat.find({
-      users: { $elemMatch: { $eq: req.rootUserId } },
-    })
+    console.log({rootUserId:req.rootUserId})
+    const chats = await Chat.find({isGroup:true})
       .populate('users')
       .populate('latestMessage')
       .populate('groupAdmin')

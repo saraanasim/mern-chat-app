@@ -4,7 +4,7 @@ import { IGroup } from "@/utils/types";
 
 const API_REQUESTS = {
   FETCH_ALL_GROUPS: {
-    path: '/api/groups',
+    path: '/api/chat/groups',
     method: HTTP_METHODS.GET,
   },
 };
