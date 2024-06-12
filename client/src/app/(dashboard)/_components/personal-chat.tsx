@@ -1,13 +1,14 @@
 import { setCurrentMessages } from '@/redux/chatsSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { selectActiveUser } from '@/redux/selectors/activeUser.selectors';
-import { selectActiveChat } from '@/redux/selectors/chatsSlice.selectors';
+import { selectActiveChat, selectChatLoading } from '@/redux/selectors/chatsSlice.selectors';
 import { Messages } from '@/ui/messages';
 import { SocketMessage } from '@/utils/types';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Socket, io } from 'socket.io-client';
 import { randomBytes } from 'crypto';
+import { Spinner } from '@/ui/spinner';
 
 let selectedChatCompare: any;
 
@@ -17,6 +18,7 @@ export const PersonalChat = () => {
   console.log('RERENDER')
   // const recepient = useAppSelector(selectRecepient)
   const activeChat = useAppSelector(selectActiveChat)
+  const chatLoading = useAppSelector(selectChatLoading)
   const activeUser = useAppSelector(selectActiveUser)
   const [isTyping, setIsTyping] = useState(false);
   const [typing, setTyping] = useState(false)
@@ -66,7 +68,11 @@ export const PersonalChat = () => {
 
   }, [])
 
-
+  if (chatLoading) return (
+    <div className='w-full h-full flex justify-center items-center'>
+      <Spinner/>
+    </div>
+  )
   if (!activeChat) return (
     <div>
       Click on Any Chat to Open

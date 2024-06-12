@@ -1,13 +1,24 @@
 'use client'
-import { useAppSelector } from "@/redux/hooks"
-import { SectionItem } from "./section-item"
+import { setActiveChat, setChatLoading } from "@/redux/chatsSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { selectAllGroups } from "@/redux/selectors/chatsSlice.selectors"
+import { IChat } from "@/utils/types"
+import { SectionItem } from "./section-item"
 
 export const GroupsList = () => {
+  const dispatch = useAppDispatch()
+
   const allGroups = useAppSelector(selectAllGroups)
 
-  const onPersonClick = (userId: string) => {
-    // dispatch(setActiveRecipient(userId))
+  const onGroupClick = async (groupId: string) => {
+    //Set loading
+    dispatch(setChatLoading(true))
+
+    const existingChat = allGroups.find((each) => each._id === groupId)
+
+    dispatch(setActiveChat(existingChat as IChat))
+
+    dispatch(setChatLoading(false))
   }
   if (!allGroups.length) return null
   return allGroups.map((each) => (
@@ -15,7 +26,7 @@ export const GroupsList = () => {
       desc="Default Group"
       name={each.chatName}
       pic={each.photo || ''}
-      onClick={onPersonClick}
+      onClick={onGroupClick}
       id={each._id}
     />
   ))
