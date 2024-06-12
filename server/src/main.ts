@@ -41,20 +41,14 @@ io.on('connection', (socket) => {
     socket.emit('connected');
   });
   socket.on('join room', (room) => {
-    console.log({room})
     socket.join(room);
   });
   socket.on('typing', (room) => socket.in(room).emit('typing'));
   socket.on('stop typing', (room) => socket.in(room).emit('stop typing'));
 
   socket.on('new message', (newMessageRecieve:SocketMessage) => {
-    console.log({newMessageRecieve})
     var chat = newMessageRecieve.chat;
     socket.in(chat._id).emit('message recieved', newMessageRecieve);
     if (!chat.users) console.log('chats.users is not defined');
-    // chat.users.forEach((user:any) => {
-    //   console.log({user})
-    //   socket.in(user._id).emit('message recieved', newMessageRecieve);
-    // });
   });
 });

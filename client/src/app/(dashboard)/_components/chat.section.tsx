@@ -4,7 +4,7 @@ import { setAllGroups, setAllUsers } from '@/redux/chatsSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { IGroup, IUser } from '@/utils/types'
 import { useEffect } from 'react'
-import { PersonalChat } from './personal-chat'
+import { Chat } from './chat'
 import { setActiveUser } from '@/redux/activeUserSlice'
 import { selectActiveChat } from '@/redux/selectors/chatsSlice.selectors'
 type Props = {
@@ -26,7 +26,7 @@ const ChatSection = ({ allUsers, allGroups,activeUser }: Props) => {
 
   return (
     <div className='max-h-screen overflow-auto'>
-     {activeChat && <PersonalChat />}
+     {activeChat && <Chat />}
     </div>
   )
 }

@@ -17,12 +17,10 @@ export const PeopleList = () => {
 
     //Find if there is any chat with current user and reciever
     const existingChat = await ChatApi.fetchExistingChat(userId)
-    console.log({ existingChat })
     //IF there is none, create one or fetch one
     if (!existingChat) {
       const newChat = await ChatApi.createNewChat(userId)
       dispatch(setActiveChat(newChat))
-      console.log({ newChat })
     }
     else {
       dispatch(setActiveChat(existingChat))

@@ -5,7 +5,7 @@ import { MessageItem } from './message-item'
 export const Messages = () => {
   const currentMessages = useAppSelector(selectCurrentMessages)
   return (
-    <div className='overflow-auto max-h-screen flex flex-col gap-4'>
+    <div className='min-h-80 overflow-auto max-h-screen flex flex-col gap-4'>
       {currentMessages.map((each) => <MessageItem {...each} />)}
     </div>
   )

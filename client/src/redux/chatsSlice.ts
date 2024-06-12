@@ -50,7 +50,20 @@ const chatsSlice = createSlice({
     setAllGroups: (state, { payload }: PayloadAction<ChatsSliceType['allGroups']>) => {
       state.allGroups = payload;
     },
+    resetChat: (state) => {
+      state.activeChat = initialState.activeChat;
+      state.currentMessages = initialState.currentMessages
+    },
   },
 });
-export const { setActiveRecipient, setNotifications, setAllUsers, setAllGroups, setChatLoading, setActiveChat, setCurrentMessages } = chatsSlice.actions;
+export const {
+  setActiveRecipient,
+  setNotifications,
+  setAllUsers,
+  setAllGroups,
+  setChatLoading,
+  setActiveChat,
+  setCurrentMessages,
+  resetChat
+ } = chatsSlice.actions;
 export default chatsSlice.reducer;

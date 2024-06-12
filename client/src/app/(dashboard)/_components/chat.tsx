@@ -2,21 +2,20 @@ import { setCurrentMessages } from '@/redux/chatsSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { selectActiveUser } from '@/redux/selectors/activeUser.selectors';
 import { selectActiveChat, selectChatLoading } from '@/redux/selectors/chatsSlice.selectors';
+import { ChatHeader } from '@/ui/chat-header';
 import { Messages } from '@/ui/messages';
+import { Spinner } from '@/ui/spinner';
 import { SocketMessage } from '@/utils/types';
+import { randomBytes } from 'crypto';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Socket, io } from 'socket.io-client';
-import { randomBytes } from 'crypto';
-import { Spinner } from '@/ui/spinner';
 
 let selectedChatCompare: any;
 
-export const PersonalChat = () => {
+export const Chat = () => {
   const socketRef = useRef<Socket | null>(null);
   const dispatch = useDispatch();
-  console.log('RERENDER')
-  // const recepient = useAppSelector(selectRecepient)
   const activeChat = useAppSelector(selectActiveChat)
   const chatLoading = useAppSelector(selectChatLoading)
   const activeUser = useAppSelector(selectActiveUser)
@@ -45,7 +44,9 @@ export const PersonalChat = () => {
   useEffect(() => {
     socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL as string)
 
-    socketRef.current?.on("typing", () => setIsTyping(true))
+    socketRef.current?.on("typing", () => {
+      setIsTyping(true)
+    })
     socketRef.current?.on("stop typing", () => setIsTyping(false))
 
     socketRef.current?.emit("setup", activeUser)
@@ -62,15 +63,22 @@ export const PersonalChat = () => {
     fetchMessagesFunc()
 
     socketRef.current?.on("message recieved", (newMessageRecieved) => {
-      console.log({ newMessageRecieved, selectedChatCompare })
+      console.log({ newMessageRecieved })
       dispatch(setCurrentMessages(newMessageRecieved))
     })
 
-  }, [])
+    return () => {
+      socketRef.current?.off("typing");
+      socketRef.current?.off("stop typing");
+      socketRef.current?.off("connected");
+      socketRef.current?.off("message recieved");
+      socketRef.current?.disconnect();
+    }
+  }, [activeUser, activeChat])
 
   if (chatLoading) return (
     <div className='w-full h-full flex justify-center items-center'>
-      <Spinner/>
+      <Spinner />
     </div>
   )
   if (!activeChat) return (
@@ -80,7 +88,8 @@ export const PersonalChat = () => {
   )
 
   return (
-    <div className='max-h-screen overflow-auto flex flex-col'>
+    <div className=' min-h-screen max-h-screen overflow-auto flex flex-col'>
+      <ChatHeader />
       <Messages />
       <div className='border-[1px] border-[#aabac8] px-6 py-3 w-[360px] sm:w-[400px] md:w-[350px] h-[50px] lg:w-[400px] rounded-t-[10px]'>
 

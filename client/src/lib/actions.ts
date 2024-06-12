@@ -65,7 +65,6 @@ export async function loginServerAction(prevState: any, formData: FormData) {
 
         }
         else {
-            console.log({loginResponse})
             setAuthCookie(loginResponse.token)
         }
 

@@ -1,4 +1,6 @@
+import { useAppDispatch } from '@/redux/hooks'
 import { Avatar } from './avatar'
+import { resetChat } from '@/redux/chatsSlice'
 
 type Props = {
     id: string
@@ -9,9 +11,15 @@ type Props = {
 }
 
 const SectionItem = ({ name, pic, desc, id, onClick }: Props) => {
+    const dispatch=useAppDispatch()
+
+    const handleClick=()=>{
+        dispatch(resetChat())
+        onClick(id)
+    }
 
     return (
-        <div className='flex flex-col md:flex-row gap-4 cursor-pointer hover:bg-blue-500' onClick={() => onClick(id)}>
+        <div className='flex flex-col md:flex-row gap-4 cursor-pointer hover:bg-blue-500' onClick={handleClick}>
             <Avatar
                 name={name}
                 pic={pic}
