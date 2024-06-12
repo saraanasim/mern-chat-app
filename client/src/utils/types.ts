@@ -23,3 +23,15 @@ export type IUser = {
   profilePic: string;
   bio: string
 }
+
+export type IChat = {
+  photo?: string;
+  chatName: string;
+  isGroup?: boolean;
+  users: string[];
+  groupAdmin: string | null;
+}
+
+export type IGroup = Omit<IChat, 'isGroup'> & {
+  isGroup: true
+}

@@ -26,7 +26,6 @@ export const register = async (req: CustomRequest, res: Response) => {
 // Login user
 export const login = async (req: CustomRequest, res: Response) => {
   const { email, password } = req.body;
-  console.log({email,password})
   try {
     const valid = await user.findOne({ email });
     if (!valid) return res.status(200).json({ message: 'User does not exist' });
@@ -45,14 +44,12 @@ export const login = async (req: CustomRequest, res: Response) => {
 
     res.status(200).json({ token, status: 200 });
   } catch (error) {
-    console.log({error})
     res.status(500).json({ error });
   }
 };
 
 // Validate user
 export const validUser = async (req: CustomRequest, res: Response) => {
-  console.log({req})
   try {
     const validUser = await user.findOne({ _id: req.rootUserId }).select('-password');
     if (!validUser) return res.json({ message: 'User is not valid' });
@@ -81,18 +78,6 @@ export const getUserById = async (req: CustomRequest, res: Response) => {
   try {
     const selectedUser = await user.findOne({ _id: id }).select('-password');
     res.status(200).json(selectedUser);
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
-
-// Update user info
-export const updateInfo = async (req: CustomRequest, res: Response) => {
-  const { id } = req.params;
-  const { bio, name } = req.body;
-  try {
-    const updatedUser = await user.findByIdAndUpdate(id, { name, bio });
-    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error });
   }

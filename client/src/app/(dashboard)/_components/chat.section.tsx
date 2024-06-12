@@ -1,19 +1,22 @@
 'use client'
 
 import { setAllUsers } from '@/redux/chatsSlice'
+import { setAllGroups } from '@/redux/groupsSlice'
 import { useAppDispatch } from '@/redux/hooks'
-import { IUser } from '@/utils/types'
+import { IGroup, IUser } from '@/utils/types'
 import { useEffect } from 'react'
-type Props={
-    allUsers:IUser[]
+type Props = {
+  allUsers: IUser[],
+  allGroups: IGroup[]
 }
 
-const ChatSection = ({allUsers}:Props) => {
-    const dispatch=useAppDispatch()
-    useEffect(()=>{
-        console.log({allUsers})
-        dispatch(setAllUsers(allUsers))
-    },[])
+const ChatSection = ({ allUsers, allGroups }: Props) => {
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    console.log({ allUsers })
+    dispatch(setAllUsers(allUsers))
+    dispatch(setAllGroups(allGroups))
+  }, [])
 
 
   return (
