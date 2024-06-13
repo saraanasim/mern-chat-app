@@ -6,7 +6,7 @@ const PeopleSection = () => {
   return (
     <div className="md:col-span-3 flex flex-col border border-gray-500">
       <Heading text="People" />
-      <div className="max-h-screen max-w-screen overflow-auto flex md:flex-col gap-4">
+      <div className="max-w-screen overflow-auto flex md:flex-col gap-4">
         <PeopleList />
       </div>
     </div>

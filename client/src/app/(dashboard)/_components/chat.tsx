@@ -18,7 +18,7 @@ export const Chat = () => {
   const activeChat = useAppSelector(selectActiveChat)
   const chatLoading = useAppSelector(selectChatLoading)
   const activeUser = useAppSelector(selectActiveUser)
-  const [isTyping, setIsTyping] = useState<string|null>(null);
+  const [isTyping, setIsTyping] = useState<string | null>(null);
   const [typing, setTyping] = useState(false)
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -67,7 +67,7 @@ export const Chat = () => {
   useEffect(() => {
     socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL as string)
 
-    socketRef.current?.on("typing", (userName:string) => {
+    socketRef.current?.on("typing", (userName: string) => {
       console.log('IS typing')
       setIsTyping(userName)
     })
@@ -108,15 +108,29 @@ export const Chat = () => {
   )
 
   return (
-    <div className=' min-h-screen max-h-screen overflow-auto flex flex-col'>
+    <div className="overflow-auto flex flex-col bg-gray-100">
       <ChatHeader />
-      <Messages />
-      <ChatTyping name={isTyping} />
-      <div className='border-[1px] border-[#aabac8] px-6 py-3 w-[360px] sm:w-[400px] md:w-[350px] h-[50px] lg:w-[400px] rounded-t-[10px]'>
-
-        <form onKeyDown={(e) => onSendMessage(e)} onSubmit={(e) => e.preventDefault()}>
-          <input onChange={handleTyping} className='focus:outline-0 w-[100%] bg-[#f8f9fa]' type="text" name="message" placeholder="Enter message" value={message} />
-        </form>
+      <div className="flex-grow overflow-y-auto p-4">
+        <Messages />
+      </div>
+      <div className="px-4 py-2 bg-white shadow-md">
+        <ChatTyping name={isTyping} />
+        <div className="mt-2 px-4 py-2 bg-white rounded-t-lg">
+          <form
+            onKeyDown={(e) => onSendMessage(e)}
+            onSubmit={(e) => e.preventDefault()}
+            className="flex items-center"
+          >
+            <input
+              onChange={handleTyping}
+              className="focus:outline-none w-full bg-gray-50 border border-gray-300 rounded-full py-2 px-4 text-sm text-gray-700 placeholder-gray-400"
+              type="text"
+              name="message"
+              placeholder="Enter message"
+              value={message}
+            />
+          </form>
+        </div>
       </div>
     </div>
   );

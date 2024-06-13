@@ -107,3 +107,8 @@ export async function signupServerAction(prevState: any, formData: FormData) {
 
     redirect('/')
 }
+
+export const onLogout = () => {
+    cookies().delete('auth')
+    redirect('/login')
+}
