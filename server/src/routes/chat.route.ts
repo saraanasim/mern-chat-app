@@ -1,5 +1,5 @@
 import express from 'express';
-import { createChat, getAllGroups, getExistingChat } from '../controllers/chatControllers';
+import { createChat, getAllGroups, getExistingChat } from '../controllers/chat.controller';
 import { Auth } from '../middleware/user';
 const router = express.Router();
 

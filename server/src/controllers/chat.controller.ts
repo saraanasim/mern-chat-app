@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { PopulateOptions } from 'mongoose';
-import Chat from '../models/chatModel';
-import User from '../models/userModel';
+import Chat from '../models/chat.model';
+import User from '../models/user.model';
 import { CustomRequest } from '../utils/types';
 
 export const getAllGroups = async (req: CustomRequest, res: Response): Promise<void> => {
@@ -21,7 +21,7 @@ export const getAllGroups = async (req: CustomRequest, res: Response): Promise<v
     res.status(200).json(finalChats);
   } catch (error) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -45,7 +45,7 @@ export const getExistingChat = async (req: CustomRequest, res: Response): Promis
     res.status(200).json(chatExists || null);
   } catch (error) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -70,7 +70,7 @@ export const createChat = async (req: CustomRequest, res: Response): Promise<voi
     res.status(201).json(populatedChat);
   } catch (error) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 };
 

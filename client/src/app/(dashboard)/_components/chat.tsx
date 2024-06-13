@@ -70,12 +70,9 @@ export const Chat = () => {
     socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL as string)
 
     socketRef.current?.on("typing", (userName: string) => {
-      console.log('IS typing')
       setIsTyping(userName)
     })
     socketRef.current?.on("stop typing", () => {
-      console.log('stopped typing')
-
       setIsTyping(null)
     })
 
@@ -84,7 +81,6 @@ export const Chat = () => {
       setSocketConnected(true)
       if (activeChat) {
         const chatMessages = await MessageApi.fetchMessages({ chatId: activeChat._id })
-        console.log({ chatMessages })
         dispatch(setChatMessages(chatMessages))
       }
     })
@@ -98,7 +94,6 @@ export const Chat = () => {
     fetchMessagesFunc()
 
     socketRef.current?.on("message recieved", (newMessageRecieved) => {
-      console.log({ newMessageRecieved })
       dispatch(setCurrentMessages(newMessageRecieved))
     })
   }, [activeUser, activeChat])

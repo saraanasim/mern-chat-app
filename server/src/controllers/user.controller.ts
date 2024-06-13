@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { Response } from 'express';
-import user from '../models/userModel';
+import user from '../models/user.model';
 import { CustomRequest } from '../utils/types';
 require('dotenv').config();
 

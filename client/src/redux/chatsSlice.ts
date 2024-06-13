@@ -55,6 +55,7 @@ const chatsSlice = createSlice({
     resetChat: (state) => {
       state.activeChat = initialState.activeChat;
       state.currentMessages = initialState.currentMessages
+      state.recipient=initialState.recipient
     },
     setChatMessages: (state, { payload }: { payload: IMessage[] }) => {
       const convertedMessages: SocketMessage[] = payload.map(({ chatId, message, sender, _id }) => ({ chat: chatId, message, sender, messageId: _id }))

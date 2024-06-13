@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import Chat from '../models/chatModel';
-import Message from '../models/messageModel';
+import Chat from '../models/chat.model';
+import Message from '../models/message.model';
 import { CustomRequest } from '../utils/types';
 
 export const sendMessage = async (req:CustomRequest, res:Response) => {
@@ -24,7 +24,7 @@ export const sendMessage = async (req:CustomRequest, res:Response) => {
     });
     res.status(200).send(msg);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: error });
   }
 };
@@ -45,6 +45,6 @@ export const getMessages = async (req:CustomRequest, res:Response) => {
     res.status(200).json(messages);
   } catch (error) {
     res.sendStatus(500).json({ error: error });
-    console.log(error);
+    console.error(error);
   }
 };
