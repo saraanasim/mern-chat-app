@@ -1,4 +1,4 @@
-import { IChat, IGroup, IUser, SocketMessage } from '@/utils/types';
+import { IChat, IGroup, IMessage, IUser, SocketMessage } from '@/utils/types';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export type ChatsSliceType = {
@@ -56,6 +56,11 @@ const chatsSlice = createSlice({
       state.activeChat = initialState.activeChat;
       state.currentMessages = initialState.currentMessages
     },
+    setChatMessages: (state, { payload }: { payload: IMessage[] }) => {
+      const convertedMessages: SocketMessage[] = payload.map(({ chatId, message, sender, _id }) => ({ chat: chatId, message, sender, messageId: _id }))
+      state.currentMessages = convertedMessages;
+    },
+
   },
 });
 export const {
@@ -66,6 +71,7 @@ export const {
   setChatLoading,
   setActiveChat,
   setCurrentMessages,
-  resetChat
+  resetChat,
+  setChatMessages
 } = chatsSlice.actions;
 export default chatsSlice.reducer;

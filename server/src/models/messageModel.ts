@@ -1,4 +1,13 @@
 import mongoose from "mongoose";
+
+export interface IMessage extends Document {
+  sender: mongoose.Schema.Types.ObjectId;
+  message: string;
+  chatId: mongoose.Schema.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const messageSchema = new mongoose.Schema(
   {
     sender: {

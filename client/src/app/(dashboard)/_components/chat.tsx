@@ -1,4 +1,5 @@
-import { setCurrentMessages } from '@/redux/chatsSlice';
+import { MessageApi } from '@/lib/api/messages.api';
+import { setChatMessages, setCurrentMessages } from '@/redux/chatsSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { selectActiveUser } from '@/redux/selectors/activeUser.selectors';
 import { selectActiveChat, selectChatLoading } from '@/redux/selectors/chatsSlice.selectors';
@@ -39,6 +40,7 @@ export const Chat = () => {
       socketRef.current?.emit("stop typing", activeChat._id)
       socketRef.current?.emit("new message", messagePayload)
       dispatch(setCurrentMessages(messagePayload))
+      MessageApi.sendMessage({ chatId: activeChat._id, message })
     }
   }
 
@@ -78,8 +80,13 @@ export const Chat = () => {
     })
 
     socketRef.current?.emit("setup", activeUser)
-    socketRef.current?.on("connected", () => {
+    socketRef.current?.on("connected", async () => {
       setSocketConnected(true)
+      if (activeChat) {
+        const chatMessages = await MessageApi.fetchMessages({ chatId: activeChat._id })
+        console.log({ chatMessages })
+        dispatch(setChatMessages(chatMessages))
+      }
     })
 
     const fetchMessagesFunc = async () => {

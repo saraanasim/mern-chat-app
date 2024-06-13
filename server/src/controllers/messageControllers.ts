@@ -29,7 +29,7 @@ export const sendMessage = async (req:CustomRequest, res:Response) => {
   }
 };
 export const getMessages = async (req:CustomRequest, res:Response) => {
-  const { chatId } = req.params;
+  const { chatId } = req.body;
   try {
     let messages = await Message.find({ chatId })
       .populate({

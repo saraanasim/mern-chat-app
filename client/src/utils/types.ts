@@ -24,7 +24,7 @@ export type IUser = {
   email: string;
   password: string;
   profilePic: string;
-  isActive:boolean
+  isActive: boolean
   bio: string
 }
 
@@ -36,9 +36,16 @@ export type IChat = {
   users: string[];
   groupAdmin: string | null;
 }
-
+export type IMessage = {
+  _id:string
+  sender: IUser;
+  message: string;
+  chatId: IChat;
+  createdAt: Date;
+  updatedAt: Date;
+}
 export type IGroup = Omit<IChat, 'isGroup'> & {
   isGroup: true
 }
 
-export type SocketMessage={ sender: ActiveUserSlice, message: string,chat:IChat ,messageId:string }
+export type SocketMessage = { sender: ActiveUserSlice, message: string, chat: IChat, messageId: string }
