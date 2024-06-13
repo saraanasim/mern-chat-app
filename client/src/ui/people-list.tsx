@@ -32,6 +32,7 @@ export const PeopleList = () => {
   if (!allPeople.length) return null
   return allPeople.map((each) => (
     <SectionItem
+      key={each._id}
       id={each._id}
       desc={each.bio}
       name={each.name}

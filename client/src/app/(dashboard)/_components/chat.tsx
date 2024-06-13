@@ -6,7 +6,6 @@ import { selectActiveChat, selectChatLoading } from '@/redux/selectors/chatsSlic
 import { ChatHeader } from '@/ui/chat-header';
 import { Messages } from '@/ui/messages';
 import { Spinner } from '@/ui/spinner';
-import { ChatTyping } from '@/ui/typing';
 import { SocketMessage } from '@/utils/types';
 import { randomBytes } from 'crypto';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
@@ -20,8 +19,12 @@ export const Chat = () => {
   const chatLoading = useAppSelector(selectChatLoading)
   const activeUser = useAppSelector(selectActiveUser)
   const [isTyping, setIsTyping] = useState<string | null>(null);
+  const [joinedPerson, setJoinedPerson] = useState<string | null>(null);
+  const [leftPerson, setLeftPerson] = useState<string | null>(null);
   const [typing, setTyping] = useState(false)
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [message, setMessage] = useState("")
@@ -67,14 +70,8 @@ export const Chat = () => {
   };
 
   useEffect(() => {
+    if(!activeUser || !activeChat) return
     socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL as string)
-
-    socketRef.current?.on("typing", (userName: string) => {
-      setIsTyping(userName)
-    })
-    socketRef.current?.on("stop typing", () => {
-      setIsTyping(null)
-    })
 
     socketRef.current?.emit("setup", activeUser)
     socketRef.current?.on("connected", async () => {
@@ -85,16 +82,30 @@ export const Chat = () => {
       }
     })
 
-    const fetchMessagesFunc = async () => {
-      if (activeChat) {
-        socketRef.current?.emit("join room", activeChat._id)
-      }
-      return
+    if (activeChat && activeUser) {
+      socketRef.current?.emit("join room", { room: activeChat?._id, user: activeUser.name })
     }
-    fetchMessagesFunc()
+    socketRef.current?.on("typing", (userName: string) => {
+      setIsTyping(userName)
+    })
+    socketRef.current?.on("stop typing", () => {
+      setIsTyping(null)
+    })
+    socketRef.current?.on("someone joined", (userName: string) => {
+      setJoinedPerson(userName)
+      setTimeout(() => setJoinedPerson(null), 10000)
+    })
+    socketRef.current?.on("someone left", (userName: string) => {
+      setLeftPerson(userName)
+      setTimeout(() => setLeftPerson(null), 10000)
+    })
 
     socketRef.current?.on("message recieved", (newMessageRecieved) => {
       dispatch(setCurrentMessages(newMessageRecieved))
+    })
+
+    return (() => {
+      socketRef.current?.emit("leave room", { room: activeChat?._id, user: activeUser.name })
     })
   }, [activeUser, activeChat])
 
@@ -108,7 +119,6 @@ export const Chat = () => {
       Click on Any Chat to Open
     </div>
   )
-
   return (
     <div className="overflow-auto flex flex-col bg-gray-100">
       <ChatHeader />
@@ -116,7 +126,16 @@ export const Chat = () => {
         <Messages />
       </div>
       <div className="px-4 py-2 bg-white shadow-md">
-        <ChatTyping name={isTyping} />
+        {isTyping?.length && <div className='w-full flex justify-start items-center font-bold'>
+          <p className='text-black'>{isTyping} is typing ...</p>
+        </div>}
+        {joinedPerson?.length && <div className='w-full flex justify-start items-center font-bold'>
+          <p className='text-black'>{joinedPerson} joined the chat</p>
+        </div>}
+        {leftPerson?.length && <div className='w-full flex justify-start items-center font-bold'>
+          <p className='text-black'>{leftPerson} left the chat</p>
+        </div>}
+
         <div className="mt-2 px-4 py-2 bg-white rounded-t-lg">
           <form
             onKeyDown={(e) => onSendMessage(e)}

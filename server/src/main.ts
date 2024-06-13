@@ -44,8 +44,13 @@ io.on('connection', (socket) => {
     socket.join(userData._id);
     socket.emit('connected');
   });
-  socket.on('join room', (room) => {
+  socket.on('join room', ({ room, user }) => {
     socket.join(room);
+    socket.in(room).emit('someone joined', user)
+  });
+  socket.on('leave room', ({ room, user }) => {
+    socket.join(room);
+    socket.in(room).emit('someone left', user)
   });
   socket.on('typing', ({ room, user }) => {
     socket.in(room).emit('typing', user)

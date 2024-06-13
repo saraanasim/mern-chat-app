@@ -23,6 +23,7 @@ export const GroupsList = () => {
   if (!allGroups.length) return null
   return allGroups.map((each) => (
     <SectionItem
+      key={each._id}
       desc="Default Group"
       name={each.chatName}
       pic={each.photo || ''}
