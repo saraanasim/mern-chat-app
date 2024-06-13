@@ -11,8 +11,6 @@ import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Socket, io } from 'socket.io-client';
 
-let selectedChatCompare: any;
-
 export const Chat = () => {
   const socketRef = useRef<Socket | null>(null);
   const dispatch = useDispatch();
@@ -38,6 +36,7 @@ export const Chat = () => {
       }
       socketRef.current?.emit("stop typing", activeChat._id)
       socketRef.current?.emit("new message", messagePayload)
+      dispatch(setCurrentMessages(messagePayload))
     }
   }
 
@@ -66,14 +65,6 @@ export const Chat = () => {
       console.log({ newMessageRecieved })
       dispatch(setCurrentMessages(newMessageRecieved))
     })
-
-    return () => {
-      socketRef.current?.off("typing");
-      socketRef.current?.off("stop typing");
-      socketRef.current?.off("connected");
-      socketRef.current?.off("message recieved");
-      socketRef.current?.disconnect();
-    }
   }, [activeUser, activeChat])
 
   if (chatLoading) return (
