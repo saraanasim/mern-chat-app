@@ -5,7 +5,7 @@ export type ChatsSliceType = {
   allUsers: Array<IUser>
   allGroups: Array<IGroup>
   activeChat: IChat | null
-  recipient: string | null,
+  recipient: IUser | null,
   isLoading: boolean,
   notifications: Array<any>,
   currentMessages: SocketMessage[]
@@ -32,8 +32,10 @@ const chatsSlice = createSlice({
       if (isDuplicate) return
       state.currentMessages = [...state.currentMessages, payload]
     },
-    setActiveRecipient: (state, { payload }) => {
-      state.recipient = payload;
+    setActiveRecipient: (state, { payload }: { payload: string }) => {
+      const user = state.allUsers.find((each) => each._id === payload)
+      if (!user) return
+      state.recipient = user;
     },
     setActiveChat: (state, { payload }: PayloadAction<ChatsSliceType['activeChat']>) => {
       state.activeChat = payload;
@@ -65,5 +67,5 @@ export const {
   setActiveChat,
   setCurrentMessages,
   resetChat
- } = chatsSlice.actions;
+} = chatsSlice.actions;
 export default chatsSlice.reducer;

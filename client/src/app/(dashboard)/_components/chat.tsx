@@ -5,9 +5,10 @@ import { selectActiveChat, selectChatLoading } from '@/redux/selectors/chatsSlic
 import { ChatHeader } from '@/ui/chat-header';
 import { Messages } from '@/ui/messages';
 import { Spinner } from '@/ui/spinner';
+import { ChatTyping } from '@/ui/typing';
 import { SocketMessage } from '@/utils/types';
 import { randomBytes } from 'crypto';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Socket, io } from 'socket.io-client';
 
@@ -17,8 +18,9 @@ export const Chat = () => {
   const activeChat = useAppSelector(selectActiveChat)
   const chatLoading = useAppSelector(selectChatLoading)
   const activeUser = useAppSelector(selectActiveUser)
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState<string|null>(null);
   const [typing, setTyping] = useState(false)
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [message, setMessage] = useState("")
@@ -40,13 +42,40 @@ export const Chat = () => {
     }
   }
 
+  const handleTyping = (e: ChangeEvent<HTMLInputElement>): void => {
+    setMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socketRef.current?.emit('typing', { room: activeChat?._id, user: activeUser.name });
+    }
+
+    // Clear the existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Set a new timeout
+    typingTimeoutRef.current = setTimeout(() => {
+      socketRef.current?.emit('stop typing', activeChat?._id);
+      setTyping(false);
+    }, 3000);
+  };
+
   useEffect(() => {
     socketRef.current = io(process.env.NEXT_PUBLIC_SERVER_URL as string)
 
-    socketRef.current?.on("typing", () => {
-      setIsTyping(true)
+    socketRef.current?.on("typing", (userName:string) => {
+      console.log('IS typing')
+      setIsTyping(userName)
     })
-    socketRef.current?.on("stop typing", () => setIsTyping(false))
+    socketRef.current?.on("stop typing", () => {
+      console.log('stopped typing')
+
+      setIsTyping(null)
+    })
 
     socketRef.current?.emit("setup", activeUser)
     socketRef.current?.on("connected", () => {
@@ -82,29 +111,12 @@ export const Chat = () => {
     <div className=' min-h-screen max-h-screen overflow-auto flex flex-col'>
       <ChatHeader />
       <Messages />
+      <ChatTyping name={isTyping} />
       <div className='border-[1px] border-[#aabac8] px-6 py-3 w-[360px] sm:w-[400px] md:w-[350px] h-[50px] lg:w-[400px] rounded-t-[10px]'>
 
         <form onKeyDown={(e) => onSendMessage(e)} onSubmit={(e) => e.preventDefault()}>
-          <input onChange={(e) => {
-            setMessage(e.target.value)
-            if (!socketConnected) return
-            if (!typing) {
-              setTyping(true)
-              socketRef.current?.emit('typing', activeUser._id)
-            }
-            let lastTime = new Date().getTime()
-            var time = 3000
-            setTimeout(() => {
-              var timeNow = new Date().getTime()
-              var timeDiff = timeNow - lastTime
-              if (timeDiff >= time && typing) {
-                socketRef.current?.emit("stop typing", activeUser._id)
-                setTyping(false)
-              }
-            }, time)
-          }} className='focus:outline-0 w-[100%] bg-[#f8f9fa]' type="text" name="message" placeholder="Enter message" value={message} />
+          <input onChange={handleTyping} className='focus:outline-0 w-[100%] bg-[#f8f9fa]' type="text" name="message" placeholder="Enter message" value={message} />
         </form>
-
       </div>
     </div>
   );
